@@ -1,0 +1,6 @@
+@_5.HaftaGorev_HostAddress = http://localhost:5242
+
+GET {{_5.HaftaGorev_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
