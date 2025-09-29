@@ -63,5 +63,38 @@ namespace _5.HaftaGorev.Controllers
             public string Content { get; set; }
         }
 
+        public interface IID 
+        {
+            public int Id { get; set; }
+        }
+
+        [HttpPut("/{article.id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [Consumes(typeof(Article), "application/json")]
+        public IResult changeArticle(Article article) 
+        {
+            Article? changeArticle = _articles.FirstOrDefault(x => x.Id == article.Id);
+
+            if (changeArticle.Id == null)
+            {
+                return Results.BadRequest("Bu ID'de bir makale yok");
+            }
+            else 
+            {
+                if (string.IsNullOrEmpty(changeArticle.Title))
+                {
+                    return Results.BadRequest("Makalenin Tittle'ı(Başlığı) boş bırakılamaz");
+                }
+
+                changeArticle.Title = article.Title;
+                changeArticle.Content = article.Content;
+                return Results.Ok("Makale güncellendi");
+            }
+
+            
+        }
+
+
     }
 }

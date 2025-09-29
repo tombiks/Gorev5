@@ -2,7 +2,7 @@
 
 namespace _5.HaftaGorev.Models
 {
-    public class Article : CreateArticle    
+    public class Article : CreateArticle, IID
     {
         public int Id { get; set; }
 
