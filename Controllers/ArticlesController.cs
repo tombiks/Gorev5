@@ -9,20 +9,20 @@ namespace _5.HaftaGorev.Controllers
     [ApiController]
     public class ArticlesController : ControllerBase
     {
-        static new List<Article> _articles = new List<Article>();
+        static List<Article> _articles = new List<Article>();
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Article>))]
-        public IActionResult getList()
+        public IActionResult GetList()
         {
             return Ok(_articles); //otomatik json
         }
 
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Article))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [Consumes(typeof(int), "application/json")]
-        public IResult getArticle(int id)
+        public IResult GetArticle(int id)
         {
             Article? article = _articles.FirstOrDefault(x => x.Id == id);
 
@@ -38,7 +38,7 @@ namespace _5.HaftaGorev.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(string))]
         [Consumes(typeof(Article), "application/json")]
-        public IResult addArticle(CreateArticle article)
+        public IResult AddArticle(CreateArticle article)
         {
             if (string.IsNullOrEmpty(article.Title))
             {
@@ -57,15 +57,11 @@ namespace _5.HaftaGorev.Controllers
             return Results.Created($"/{newArticle.Id}", "Yeni makale oluşturuldu");
         }
 
-
-
-
-
-        [HttpPut("/{article.id}")]
+        [HttpPut("{article.id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [Consumes(typeof(Article), "application/json")]
-        public IResult changeArticle(Article article)
+        public IResult ChangeArticle(Article article)
         {
             Article? changeArticle = _articles.FirstOrDefault(x => x.Id == article.Id);
 
@@ -85,6 +81,23 @@ namespace _5.HaftaGorev.Controllers
                 return Results.Ok("Makale güncellendi");
 
             }
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]        
+        [Consumes(typeof(int), "application/json")]
+        public IResult DelArticle(int ID) 
+        {
+            Article? silinecekArticle = _articles.FirstOrDefault(x => x.Id == ID);
+
+            if(silinecekArticle == null)
+            {
+                return Results.NoContent();
+            }
+
+            _articles.Remove(silinecekArticle);
+
+            return Results.Ok("Heeeey dostum makaleyi sildim.");
         }
 
 

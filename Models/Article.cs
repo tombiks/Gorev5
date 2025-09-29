@@ -4,8 +4,8 @@ namespace _5.HaftaGorev.Models
 {
     public class CreateArticle
     {
-        public string Title { get; set; }
-        public string Content { get; set; }
+        public string? Title { get; set; }
+        public string? Content { get; set; }
     }
 
     public interface IID
