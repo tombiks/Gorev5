@@ -53,34 +53,27 @@ namespace _5.HaftaGorev.Controllers
             };
 
             _articles.Add(newArticle);
-            
-            return Results.Created($"/{newArticle.Id}","Yeni makale oluşturuldu");
+
+            return Results.Created($"/{newArticle.Id}", "Yeni makale oluşturuldu");
         }
 
-        public class CreateArticle 
-        {
-            public string Title { get; set; }
-            public string Content { get; set; }
-        }
 
-        public interface IID 
-        {
-            public int Id { get; set; }
-        }
+
+
 
         [HttpPut("/{article.id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [Consumes(typeof(Article), "application/json")]
-        public IResult changeArticle(Article article) 
+        public IResult changeArticle(Article article)
         {
             Article? changeArticle = _articles.FirstOrDefault(x => x.Id == article.Id);
 
-            if (changeArticle.Id == null)
+            if (changeArticle == null)
             {
                 return Results.BadRequest("Bu ID'de bir makale yok");
             }
-            else 
+            else
             {
                 if (string.IsNullOrEmpty(changeArticle.Title))
                 {
@@ -90,9 +83,8 @@ namespace _5.HaftaGorev.Controllers
                 changeArticle.Title = article.Title;
                 changeArticle.Content = article.Content;
                 return Results.Ok("Makale güncellendi");
-            }
 
-            
+            }
         }
 
 
