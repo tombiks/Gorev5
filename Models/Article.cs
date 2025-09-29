@@ -1,10 +1,11 @@
-﻿namespace _5.HaftaGorev.Models
+﻿using static _5.HaftaGorev.Controllers.ArticlesController;
+
+namespace _5.HaftaGorev.Models
 {
-    public class Article
+    public class Article : CreateArticle    
     {
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
+
     }
 
 }
