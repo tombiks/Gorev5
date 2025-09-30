@@ -57,7 +57,7 @@ namespace _5.HaftaGorev.Controllers
             return Results.Created($"/{newArticle.Id}", "Yeni makale oluşturuldu");
         }
 
-        [HttpPut("{article.id}")]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [Consumes(typeof(Article), "application/json")]
@@ -83,12 +83,12 @@ namespace _5.HaftaGorev.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]        
         [Consumes(typeof(int), "application/json")]
-        public IResult DelArticle(int ID) 
+        public IResult DelArticle(int id) 
         {
-            Article? silinecekArticle = _articles.FirstOrDefault(x => x.Id == ID);
+            Article? silinecekArticle = _articles.FirstOrDefault(x => x.Id == id);
 
             if(silinecekArticle == null)
             {

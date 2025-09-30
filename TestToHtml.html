@@ -1,0 +1,391 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makale Yönetim Paneli</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .api-url-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+            .api-url-section label {
+                display: block;
+                margin-bottom: 10px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .api-url-section input {
+                width: 100%;
+                padding: 12px;
+                border: 2px solid #ddd;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+
+        .add-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+            .add-section h2 {
+                margin-bottom: 20px;
+                color: #667eea;
+            }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                width: 100%;
+                padding: 12px;
+                border: 2px solid #ddd;
+                border-radius: 5px;
+                font-size: 16px;
+                transition: border-color 0.3s;
+            }
+
+                .form-group input:focus,
+                .form-group textarea:focus {
+                    outline: none;
+                    border-color: #667eea;
+                }
+
+            .form-group textarea {
+                min-height: 100px;
+                resize: vertical;
+            }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+            .btn:hover {
+                background: #5568d3;
+            }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+            .btn-danger:hover {
+                background: #c0392b;
+            }
+
+        .btn-edit {
+            background: #f39c12;
+            margin-right: 10px;
+        }
+
+            .btn-edit:hover {
+                background: #e67e22;
+            }
+
+        .articles-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+            .articles-section h2 {
+                margin-bottom: 20px;
+                color: #667eea;
+            }
+
+        .article-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+
+            .article-card:hover {
+                transform: translateX(5px);
+            }
+
+            .article-card h3 {
+                color: #333;
+                margin-bottom: 10px;
+            }
+
+            .article-card p {
+                color: #666;
+                line-height: 1.6;
+                margin-bottom: 15px;
+            }
+
+            .article-card .article-id {
+                color: #999;
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+        .article-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .no-articles {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-size: 18px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .error-message {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Makale Yönetim Paneli</h1>
+
+        <div class="api-url-section">
+            <label for="apiUrl">API Adresi:</label>
+            <input type="text" id="apiUrl" value="https://localhost:7104/api/articles" placeholder="https://localhost:XXXX/api/articles">
+        </div>
+
+        <div id="messageArea"></div>
+
+        <div class="add-section">
+            <h2>Yeni Makale Ekle</h2>
+            <form id="addForm">
+                <div class="form-group">
+                    <label for="title">Başlık:</label>
+                    <input type="text" id="title" placeholder="Makale başlığını girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">İçerik:</label>
+                    <textarea id="content" placeholder="Makale içeriğini girin"></textarea>
+                </div>
+                <button type="submit" class="btn">➕ Makale Ekle</button>
+            </form>
+        </div>
+
+        <div class="articles-section">
+            <h2>Tüm Makaleler</h2>
+            <button onclick="loadArticles()" class="btn" style="margin-bottom: 20px;">🔄 Yenile</button>
+            <div id="articlesContainer">
+                <div class="loading">Makaleler yükleniyor...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let editingId = null;
+
+        function getApiUrl() {
+            return document.getElementById('apiUrl').value.trim();
+        }
+
+        function showMessage(message, type = 'success') {
+            const messageArea = document.getElementById('messageArea');
+            const messageClass = type === 'success' ? 'success-message' : 'error-message';
+            messageArea.innerHTML = `<div class="${messageClass}">${message}</div>`;
+            setTimeout(() => {
+                messageArea.innerHTML = '';
+            }, 3000);
+        }
+
+        async function loadArticles() {
+            const container = document.getElementById('articlesContainer');
+            container.innerHTML = '<div class="loading">Makaleler yükleniyor...</div>';
+
+            try {
+                const response = await fetch(getApiUrl());
+
+                if (!response.ok) {
+                    throw new Error('Makaleler yüklenemedi');
+                }
+
+                const articles = await response.json();
+
+                if (articles.length === 0) {
+                    container.innerHTML = '<div class="no-articles">Henüz makale yok. Yukarıdan yeni makale ekleyebilirsiniz!</div>';
+                    return;
+                }
+
+                let html = '';
+                articles.forEach(article => {
+                    html += `
+                            <div class="article-card">
+                                <div class="article-id">ID: ${article.id}</div>
+                                <h3>${article.title}</h3>
+                                <p>${article.content || 'İçerik yok'}</p>
+                                <div class="article-actions">
+                                    <button class="btn btn-edit" onclick="editArticle(${article.id}, '${article.title.replace(/'/g, "\\'")}', '${(article.content || '').replace(/'/g, "\\'")}')">✏️ Düzenle</button>
+                                    <button class="btn btn-danger" onclick="deleteArticle(${article.id})">🗑️ Sil</button>
+                                </div>
+                            </div>
+                        `;
+                });
+
+                container.innerHTML = html;
+            } catch (error) {
+                container.innerHTML = `<div class="error-message">Hata: ${error.message}</div>`;
+                showMessage('Makaleler yüklenirken hata oluştu!', 'error');
+            }
+        }
+
+        document.getElementById('addForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+
+            if (!title.trim()) {
+                showMessage('Başlık boş olamaz!', 'error');
+                return;
+            }
+
+            try {
+                let response;
+
+                if (editingId) {
+                    response = await fetch(`${getApiUrl()}/${editingId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id: editingId,
+                            title: title,
+                            content: content
+                        })
+                    });
+                    showMessage('Makale güncellendi!');
+                    editingId = null;
+                    document.querySelector('#addForm button[type="submit"]').textContent = '➕ Makale Ekle';
+                } else {
+                    response = await fetch(getApiUrl(), {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            title: title,
+                            content: content
+                        })
+                    });
+                    showMessage('Yeni makale eklendi!');
+                }
+
+                if (response.ok) {
+                    document.getElementById('title').value = '';
+                    document.getElementById('content').value = '';
+                    loadArticles();
+                } else {
+                    const errorText = await response.text();
+                    showMessage(`Hata: ${errorText}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Hata: ${error.message}`, 'error');
+            }
+        });
+
+        function editArticle(id, title, content) {
+            editingId = id;
+            document.getElementById('title').value = title;
+            document.getElementById('content').value = content;
+            document.querySelector('#addForm button[type="submit"]').textContent = '💾 Güncelle';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function deleteArticle(id) {
+            if (!confirm('Bu makaleyi silmek istediğinize emin misiniz?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${getApiUrl()}/${id}`, {  // ?ID=${id} DEĞİL, /${id} olacak
+                    method: 'DELETE'
+                });
+
+                if (response.ok || response.status === 204) {
+                    showMessage('Makale silindi!');
+                    loadArticles();
+                } else {
+                    const errorText = await response.text();
+                    showMessage(`Hata: ${errorText}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Hata: ${error.message}`, 'error');
+            }
+        }
+
+        loadArticles();
+    </script>
+</body>
+</html>
